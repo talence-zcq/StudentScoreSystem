@@ -1,0 +1,127 @@
+html,body {
+    height: 100%;
+}
+
+body.my-login-page {
+    background-color: #f7f9fb;
+    font-size: 14px;
+}
+
+.my-login-page .brand {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 75%;
+    margin: 40px auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,.05);
+    position: relative;
+    z-index: 1;
+}
+
+.my-login-page .brand img {
+    max-width: 100%;
+
+}
+
+.my-login-page .card-wrapper {
+    width: 400px;
+}
+
+.my-login-page .card {
+    border-color: transparent;
+    box-shadow: 0 4px 8px rgba(0,0,0,.05);
+}
+
+.my-login-page .card.fat {
+    padding: 10px;
+}
+
+.my-login-page .card .card-title {
+    margin-bottom: 30px;
+}
+
+.my-login-page .form-control {
+    border-width: 2.3px;
+}
+
+.my-login-page .form-group label {
+    width: 100%;
+}
+
+.my-login-page .btn.btn-block {
+    padding: 12px 10px;
+}
+
+.my-login-page .footer {
+    margin: 40px 0;
+    color: #888;
+    text-align: center;
+}
+
+@media screen and (max-width: 425px) {
+    .my-login-page .card-wrapper {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .my-login-page .card.fat {
+        padding: 0;
+    }
+
+    .my-login-page .card.fat .card-body {
+        padding: 15px;
+    }
+}
+/*验证码样式*/
+.code
+{
+    font-family:方正喵呜体;
+    font-style:italic;
+    color:rgb(114, 163, 226);
+    font-size:35px;
+    border:0;
+    margin-left:74px;
+    /* padding:2px 3px; */
+    letter-spacing:3px;
+    font-weight:bolder;
+    display: inline-block;
+    position: relative;
+    left: -70px;
+    float:left;
+    cursor:pointer;
+    width:120px;
+    height:50px;
+    line-height:60px;
+    text-align:left;
+    /* vertical-align:middle; */
+    background-color: rgba(255,255,255,.2)
+}
+/*更换验证码-文字样式*/
+.change {
+    text-decoration:none;
+    font-size:14px;
+    color:#000000;
+    /* padding-left:20px; */
+    margin-top: 20px;
+}
+/*更换验证码-鼠标点击文字样式*/
+.change:hover {
+    text-decoration:underline;
+    cursor:pointer;
+}
+
+.disappear{
+    animation: disappearAnimation 3s forwards reverse;
+}
+@keyframes disappearAnimation {
+    from {
+        opacity: 1;
+        top: 150px;
+    }
+    to{
+        opacity: 0;
+        top: -230px;
+    }
+}

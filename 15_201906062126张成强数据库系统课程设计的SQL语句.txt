@@ -1,0 +1,247 @@
+-- 学院信息
+CREATE TABLE zhangcq_Colleges15
+(	
+	-- 学院编号，学院名
+	zcq_Collegeno15 VARCHAR(20) PRIMARY KEY,
+	zcq_Collegename15 VARCHAR(20)
+)
+
+-- 班级信息
+CREATE TABLE zhangcq_Class15
+(	
+	-- 班级编号，班级名
+	zcq_Classno15 VARCHAR(20) PRIMARY KEY,
+	zcq_Classname15 VARCHAR(20)
+)
+
+-- 新建教师表
+CREATE TABLE zhangcq_Teachers15
+(	
+  -- 	工号，姓名，性别，职称，联系电话，权限级别，登录密码，出生年月，学院编号（外键）
+	zcq_Tno15 VARCHAR(20) PRIMARY KEY,
+	zcq_Tname15 VARCHAR(20),
+	zcq_Tsex15 VARCHAR(1),
+	zcq_Tprofess15 VARCHAR(20),
+	zcq_Tphone15 VARCHAR(20),
+	zcq_Tauthority15 INT,
+	zcq_Tpwd15 VARCHAR(20),
+	zcq_Tage15 INT,
+	zcq_Collegeno15 VARCHAR(20),
+	
+	-- 	约束条件
+	CONSTRAINT Teacher_College FOREIGN KEY(zcq_Collegeno15) REFERENCES zhangcq_Colleges15(zcq_Collegeno15),
+	CONSTRAINT Teacher_authority CHECK(zcq_Tauthority15>=0 and zcq_Tauthority15<=10),
+	CONSTRAINT Teacher_age CHECK(zcq_Tage15>=0 and zcq_Tage15<=100),
+	CONSTRAINT Teachers_sex CHECK(zcq_Tsex15='M' or zcq_Tsex15='F')
+)
+
+
+-- 课程信息
+CREATE TABLE zhangcq_Courses15
+(
+	--  课程编号,课程名，开设学院，课程学分，课程学时，开设学期，考核方式，任课教师号（外键）
+	zcq_Courseno15 VARCHAR(20) PRIMARY KEY,
+	zcq_Coursename15 VARCHAR(20), 
+	zcq_Collegeno15 VARCHAR(20), 
+	zcq_Ccredit15 DOUBLE,
+	zcq_Chours15 INT,
+	zcq_Cterm15 VARCHAR(20), 
+	zcq_Cassessment15 VARCHAR(2), 
+	zcq_Tno15 VARCHAR(20),
+	
+	-- 	约束条件
+	CONSTRAINT Teacher_Course FOREIGN KEY(zcq_Tno15) REFERENCES zhangcq_Teachers15(zcq_Tno15),
+	CONSTRAINT College_Course FOREIGN KEY(zcq_Collegeno15) REFERENCES zhangcq_Teachers15(zcq_Collegeno15),
+	CONSTRAINT Courses_credit CHECK(zcq_Ccredit15>=0 and zcq_Ccredit15<=10),
+	CONSTRAINT Courses_hours CHECK(zcq_Chours15>=0 and zcq_Chours15<=100),
+	CONSTRAINT Courses_assessment CHECK(zcq_Cassessment15='考试' or zcq_Cassessment15='考查')
+)
+
+-- 专业信息
+CREATE TABLE zhangcq_Majors15
+(	
+	-- 专业编号，专业名，所属学院（外键）
+	zcq_Mno15 VARCHAR(20) PRIMARY KEY,
+	zcq_Mname15 VARCHAR(20), 
+	zcq_Collegeno15 VARCHAR(20),
+	
+	-- 	约束条件
+	CONSTRAINT Major_College FOREIGN KEY(zcq_Collegeno15) REFERENCES zhangcq_Colleges15(zcq_Collegeno15)
+)
+
+-- 新建学生表
+CREATE TABLE zhangcq_Students15
+(	
+  -- 	学号，专业（外键），姓名，性别，出生年月，平均绩点，已修学分，联系电话，生源地，登录密码
+	zcq_Sno15 VARCHAR(20) PRIMARY KEY,
+	zcq_Mno15 VARCHAR(20),
+	zcq_Sname15 VARCHAR(20),
+	zcq_Ssex15 VARCHAR(1),
+	zcq_Sage15 INT,
+	zcq_Savggpa15 DOUBLE,
+	zcq_Scredit15 DOUBLE,
+	zcq_Sphone15 VARCHAR(20),
+	zcq_Shometown15 VARCHAR(20),
+	zcq_Spwd15 VARCHAR(20),
+	zcq_Classno15 VARCHAR(20),
+	
+	-- 	约束条件
+	CONSTRAINT Student_Major FOREIGN KEY(zcq_Mno15) REFERENCES zhangcq_Majors15(zcq_Mno15),
+	CONSTRAINT Student_Class FOREIGN KEY(zcq_Classno15) REFERENCES zhangcq_Class15(zcq_Classno15),
+	CONSTRAINT Students_avggpa CHECK(zcq_Savggpa15>=0 and zcq_Savggpa15<=5),
+	CONSTRAINT Students_credit CHECK(zcq_Scredit15>=0 and zcq_Scredit15<=300),
+	CONSTRAINT Students_age CHECK(zcq_Sage15>=0 and zcq_Sage15<=100),
+	CONSTRAINT Students_sex CHECK(zcq_Ssex15='M' or zcq_Ssex15='F')
+)
+
+-- 选修信息
+CREATE TABLE zhangcq_Grade15
+(	
+	-- 学号（外键），课程编号（外键），成绩，任课教师编号（外键），学期
+	zcq_Sno15 VARCHAR(20),
+	zcq_Courseno15 VARCHAR(20),
+	zcq_Grade15 INT,
+	zcq_Tno15 VARCHAR(20),
+	zcq_Cterm15 VARCHAR(20), 
+	
+	-- 约束条件
+	PRIMARY KEY(zcq_Sno15,zcq_Courseno15,zcq_Tno15),
+	CONSTRAINT Student_Grade FOREIGN KEY(zcq_Sno15) REFERENCES zhangcq_Students15(zcq_Sno15),
+	CONSTRAINT Teacher_Grade FOREIGN KEY(zcq_Tno15) REFERENCES zhangcq_Teachers15(zcq_Tno15),
+	CONSTRAINT Course_Grade FOREIGN KEY(zcq_Courseno15) REFERENCES zhangcq_Courses15(zcq_Courseno15),
+	CONSTRAINT Student_Course_Grade CHECK(zcq_Grade15>=0 and zcq_Grade15<=100)
+)
+
+-- 开设信息
+CREATE TABLE zhangcq_Setupinfo15
+(	
+	-- 课程编号（外键），班级编号（外键）
+	zcq_Courseno15 VARCHAR(20), 
+	zcq_Classno15 VARCHAR(20),
+	
+	-- 约束条件
+	PRIMARY KEY(zcq_Classno15,zcq_Courseno15),
+	CONSTRAINT Setupinfo_Teacher FOREIGN KEY(zcq_Classno15) REFERENCES zhangcq_Class15(zcq_Classno15),
+	CONSTRAINT Setupinfo_Course FOREIGN KEY(zcq_Courseno15) REFERENCES zhangcq_Courses15(zcq_Courseno15)
+)
+
+-- 视图
+CREATE VIEW zhangcq_stuinfo15
+	AS
+-- 	学号，专业名，学生姓名，学生性别，班级名，联系电话，家乡
+SELECT zcq_Sno15, zcq_Mname15, zcq_Sname15, zcq_Ssex15, zcq_Classname15, zcq_Sphone15, zcq_Shometown15 
+FROM zhangcq_students15,zhangcq_class15,zhangcq_majors15
+WHERE zhangcq_students15.zcq_Class=zhangcq_class15.zcq_Classno15 and zhangcq_students15.zcq_Mno15=zhangcq_majors15.zcq_Mno15
+
+CREATE VIEW zhangcq_teainfo15
+AS
+-- 教师号，教师姓名，教师性别，教师职称，联系电话，年龄，学院名
+SELECT zcq_Tno15,zcq_Tname15,zcq_Tsex15,zcq_Tprofess15,zcq_Tphone15,zcq_Tage15,zcq_Collegename15
+FROM zhangcq_teachers15,zhangcq_colleges15
+WHERE zhangcq_teachers15.zcq_Collegeno15=zhangcq_colleges15.zcq_Collegeno15
+
+CREATE VIEW zhangcq_couinfo15
+AS
+-- 课程号，课程名，学分，学期，教师名，学院名，考核方式
+SELECT DISTINCT zhangcq_courses15.zcq_Courseno15,zcq_Coursename15,zcq_Ccredit15,zcq_Cterm15,zcq_Tname15,zcq_Collegename15,zcq_Cassessment15
+FROM zhangcq_courses15,zhangcq_colleges15,zhangcq_teachers15,zhangcq_grade15
+WHERE zhangcq_courses15.zcq_Courseno15=zhangcq_grade15.zcq_Courseno15 and zhangcq_courses15.zcq_Collegeno15=zhangcq_colleges15.zcq_Collegeno15 and zhangcq_grade15.zcq_Tno15=
+zhangcq_teachers15.zcq_Tno15
+
+CREATE VIEW zhangcq_setinfo15
+AS
+-- 课程名，班级名
+SELECT zcq_Coursename15,zcq_Classname15
+FROM zhangcq_setupinfo15, zhangcq_courses15,zhangcq_class15
+WHERE zhangcq_setupinfo15.zcq_Classno15=zhangcq_class15.zcq_Classno15 and zhangcq_setupinfo15.zcq_Courseno15=zhangcq_courses15.zcq_Courseno15
+
+CREATE VIEW zhangcq_grainfo15
+AS
+-- 学号，学生姓名，课程名，成绩，教师号，教师名，学期，班级名，课程号
+SELECT zhangcq_grade15.zcq_Sno15,zcq_Sname15,zcq_Coursename15,zcq_Grade15,zhangcq_grade15.zcq_Tno15,zcq_Tname15,zcq_Cterm15,zcq_Classname15,zhangcq_grade15.zcq_Courseno15
+FROM zhangcq_grade15,zhangcq_courses15,zhangcq_teachers15,zhangcq_students15,zhangcq_class15
+WHERE zhangcq_grade15.zcq_Sno15=zhangcq_students15.zcq_Sno15 and zhangcq_grade15.zcq_Courseno15=zhangcq_courses15.zcq_Courseno15 and zhangcq_students15.zcq_Class=zhangcq_class15.zcq_Classno15 and
+zhangcq_grade15.zcq_Tno15=zhangcq_teachers15.zcq_Tno15
+
+CREATE VIEW zhangcq_workinfo15
+AS
+-- 学号，教师号，教师名，学期，课程名，学分，学时，考核方式
+SELECT zcq_Sno15,zhangcq_grade15.zcq_Tno15,zcq_Tname15,zcq_Cterm15,zcq_Coursename15,zcq_Ccredit15,zcq_Chours15,zcq_Cassessment15
+FROM zhangcq_grade15,zhangcq_courses15,zhangcq_teachers15
+WHERE zhangcq_grade15.zcq_Courseno15=zhangcq_courses15.zcq_Courseno15 and zhangcq_grade15.zcq_Tno15=zhangcq_teachers15.zcq_Tno15
+
+-- 总学分触发器
+CREATE TRIGGER zcq_ins_credit AFTER UPDATE ON zhangcq_grade15 
+FOR EACH ROW
+BEGIN
+	UPDATE zhangcq_students15
+	SET zcq_Scredit15=(
+		SELECT SUM(zcq_Ccredit15)
+		FROM zhangcq_courses15 
+		WHERE zcq_Courseno15 IN (
+			SELECT zcq_Courseno15 
+			FROM zhangcq_grade15 
+			WHERE zcq_Grade15 >= 60 and zcq_Sno15=new.zcq_Sno15)) 
+	WHERE zcq_Sno15=new.zcq_Sno15;
+END
+
+-- 平均绩点触发器
+CREATE TRIGGER zcq_ins_gpa AFTER UPDATE ON zhangcq_grade15 
+FOR EACH ROW
+BEGIN
+	UPDATE zhangcq_students15
+	SET zcq_Savggpa15=(
+		SELECT ROUND(SUM(((zcq_Grade15-50)/10)*zcq_Ccredit15)/SUM(zcq_Ccredit15),2)
+		FROM zhangcq_courses15,zhangcq_grade15
+		WHERE zhangcq_courses15.zcq_Courseno15=zhangcq_grade15.zcq_Courseno15 and zcq_Grade15 >= 60 and zcq_Sno15=new.zcq_Sno15) 
+	WHERE zcq_Sno15=new.zcq_Sno15;
+END
+
+-- 开设课程时，把学生加入到成绩表中的存储过程
+delimiter $$
+CREATE PROCEDURE zcq_insertStu15(IN zcq_cno15 VARCHAR(20), IN zcq_banji15 VARCHAR(20),IN zcq_tno15 VARCHAR(20), IN zcq_cterm15 VARCHAR(20))
+BEGIN
+  -- 需要定义接收游标数据的变量 
+  declare finished integer default 0;
+	DECLARE zcq_varSno15 VARCHAR(20) DEFAULT NULL;
+	DECLARE cur CURSOR FOR
+	SELECT zcq_Sno15
+	FROM zhangcq_students15
+	WHERE zcq_Class=zcq_banji15;
+	declare continue handler for not found set finished = 1;
+	OPEN cur;
+	get_Sno:LOOP
+	FETCH cur INTO zcq_varSno15;
+	IF finished = 1 then 
+	LEAVE get_Sno;
+	END IF;
+	INSERT INTO zhangcq_grade15 VALUES(zcq_varSno15, zcq_cno15, 0, zcq_tno15, zcq_cterm15);
+	END LOOP get_Sno;
+	CLOSE cur;
+END
+$$
+
+DROP PROCEDURE zcq_insertStu15
+
+-- 新的一年时，所有教师学生年龄加一的存储过程
+delimiter $$
+CREATE PROCEDURE zcq_updateAge15()
+BEGIN
+  -- 需要定义接收游标数据的变量 
+	UPDATE zhangcq_students15
+	SET zcq_Sage15 = zcq_Sage15+1;
+	UPDATE zhangcq_teachers15
+	SET zcq_Tage15 = zcq_Tage15+1;
+END
+$$
+
+DROP PROCEDURE zcq_updateAge15
+
+--创建索引
+ALTER TABLE zhangcq_class15 ADD UNIQUE INDEX (zcq_Classno15);
+
+ALTER TABLE zhangcq_courses15 ADD UNIQUE INDEX (zcq_Courseno15);
+
+ALTER TABLE zhangcq_teachers15 ADD UNIQUE INDEX (zcq_Tno15);
+
+ALTER TABLE zhangcq_students15 ADD UNIQUE INDEX (zcq_Sno15);
